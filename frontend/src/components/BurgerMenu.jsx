@@ -14,10 +14,10 @@ import { useMenu } from '../context/MenuContext'
 import style from '../styles/BurgerMenu.module.css'
 const sideBarInfo = [
 	{ link: '/Home', icon: <House />, name: 'Головна' },
-	{ link: '/Stake', icon: <History />, name: 'Історія ставок' },
-	{ link: '/Balance', icon: <CircleDollarSign />, name: 'Баланс' },
-	{ link: '/Bonuses', icon: <Gem />, name: 'Бонуси' },
-	{ link: '/Profile', icon: <CircleUserRound />, name: 'Мій профіль' },
+	{ link: '/Home', icon: <History />, name: 'Проєкти' },
+	{ link: '/Balance', icon: <CircleDollarSign />, name: 'Гаманець' },
+	{ link: '/Home', icon: <Gem />, name: 'Бонуси' },
+	{ link: '/Profile', icon: <CircleUserRound />, name: 'Профіль' },
 	{ link: '/Donate', icon: <Gift />, name: 'Підтримати' },
 	{ link: '/Notifications', icon: <Mail />, name: 'Повідомлення' },
 ]

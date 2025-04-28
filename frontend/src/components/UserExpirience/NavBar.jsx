@@ -21,10 +21,10 @@ function NavBar() {
 	})
 
 	const navBarInfo = [
-		{ link: '/News', name: 'Новини' },
-		{ link: '/Games', name: 'Ігри' },
-		{ link: '/Matches', name: 'Матчі' },
-		{ link: '/Stake', name: 'Cтавки' },
+		{ link: '/News', name: 'Оголошення' }, // новини сервісу, нові проєкти
+		{ link: '/Home', name: 'Категорії' }, // категорії фріланс-завдань
+		{ link: '/Home', name: 'Проєкти' }, // список доступних проєктів
+		{ link: '/Home', name: 'Мої заявки' }, // активні ставки на проєкти
 	]
 	return (
 		<>
@@ -41,7 +41,7 @@ function NavBar() {
 							<MotionFireLogo />
 						</div>
 						<div className={`text-5xl self-end ml-5 ${rootstyle.LogoFont}`}>
-							CyberBet
+							FlexWork
 						</div>
 					</div>
 				</Link>
