@@ -1,0 +1,514 @@
+.homeContainer {
+	width: 100%;
+	min-height: 100vh;
+	background: #0a0a0a;
+	color: #ffffff;
+	overflow: hidden;
+}
+
+/* Hero Section */
+.heroSection {
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+	overflow: hidden;
+}
+
+.heroSection::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(
+			circle at 10% 20%,
+			rgba(99, 102, 241, 0.15) 0%,
+			transparent 20%
+		),
+		radial-gradient(
+			circle at 90% 80%,
+			rgba(244, 63, 94, 0.15) 0%,
+			transparent 20%
+		),
+		radial-gradient(
+			circle at 50% 50%,
+			rgba(59, 130, 246, 0.1) 0%,
+			transparent 50%
+		);
+	z-index: 1;
+}
+
+.heroSection::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+	opacity: 0.5;
+	z-index: 1;
+}
+
+.heroContent {
+	position: relative;
+	max-width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 4rem;
+	z-index: 2;
+}
+
+.heroTextContainer {
+	flex: 1;
+	max-width: 600px;
+}
+
+.heroTextContainer h1 {
+	font-size: 3.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+	margin-bottom: 1.5rem;
+	background: linear-gradient(45deg, #ffffff, rgba(255, 255, 255, 0.7));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.heroTextContainer h1 span {
+	background: linear-gradient(45deg, #ff3366, #ff6b6b);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.heroTextContainer p {
+	font-size: 1.1rem;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.7);
+	margin-bottom: 2rem;
+}
+
+.heroButtons {
+	display: flex;
+	gap: 1rem;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 2rem;
+	border-radius: 50px;
+	font-weight: 600;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	text-decoration: none;
+}
+
+.btn-primary {
+	background: linear-gradient(45deg, #ff3366, #ff6b6b);
+	color: white;
+	border: none;
+	box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+}
+
+.btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 51, 102, 0.4);
+}
+
+.btn-outline {
+	background: transparent;
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+	background: rgba(255, 255, 255, 0.1);
+	transform: translateY(-2px);
+}
+
+.heroLogoContainer {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.heroLogoContainer .heroCard {
+	position: relative;
+	width: 100%;
+	max-width: 400px;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 20px;
+	padding: 2rem;
+	text-align: center;
+	transition: all 0.3s ease;
+}
+
+.heroLogoContainer .heroCard:hover {
+	transform: translateY(-5px);
+	background: rgba(255, 255, 255, 0.08);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.heroLogoContainer .heroCardTitle {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	background: linear-gradient(45deg, #ff3366, #ff6b6b);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.heroLogoContainer .heroCardText {
+	font-size: 1.1rem;
+	color: rgba(255, 255, 255, 0.7);
+	line-height: 1.6;
+}
+
+.heroLogo {
+	max-width: 100%;
+	height: auto;
+	filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+}
+
+.heroBadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	margin-bottom: 2rem;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: all 0.3s ease;
+}
+
+.heroBadge:hover {
+	background: rgba(255, 255, 255, 0.08);
+	transform: translateY(-2px);
+}
+
+.heroBadge i {
+	color: #ff3366;
+	font-size: 1.1rem;
+}
+
+.heroBadge span {
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.heroScrollIndicator {
+	position: absolute;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	cursor: pointer;
+	opacity: 0.7;
+	transition: all 0.3s ease;
+}
+
+.heroScrollIndicator:hover {
+	opacity: 1;
+	transform: translateX(-50%) translateY(-2px);
+}
+
+.heroScrollIndicator span {
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.heroScrollIndicator i {
+	color: #ff3366;
+	animation: bounce 2s infinite;
+}
+
+.heroShape {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(80px);
+	opacity: 0.15;
+	z-index: 0;
+}
+
+.heroShape1 {
+	width: 600px;
+	height: 600px;
+	background: linear-gradient(45deg, #ff3366, #ff6b6b);
+	top: -200px;
+	left: -200px;
+	animation: float 8s ease-in-out infinite;
+}
+
+.heroShape2 {
+	width: 500px;
+	height: 500px;
+	background: linear-gradient(45deg, #4facfe, #00f2fe);
+	bottom: -150px;
+	right: -150px;
+	animation: float 8s ease-in-out infinite reverse;
+}
+
+.heroCard {
+	position: absolute;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 20px;
+	padding: 1.5rem;
+	width: 300px;
+	z-index: 1;
+	transition: all 0.3s ease;
+}
+
+.heroCard:hover {
+	transform: translateY(-5px);
+	background: rgba(255, 255, 255, 0.08);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.heroCard1 {
+	top: 20%;
+	left: 10%;
+	animation: float 6s ease-in-out infinite;
+}
+
+.heroCard2 {
+	bottom: 20%;
+	right: 10%;
+	animation: float 6s ease-in-out infinite reverse;
+}
+
+.heroCardTitle {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	background: linear-gradient(45deg, #ff3366, #ff6b6b);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.heroCardText {
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.7);
+	line-height: 1.5;
+}
+
+/* Features Section */
+.featuresSection {
+	padding: 80px 20px;
+	background-color: #f2f2f2;
+	overflow: hidden;
+}
+
+.featuresSection h2 {
+	text-align: center;
+	font-size: 2.5rem;
+	margin-bottom: 50px;
+	color: #1f2937;
+}
+
+.featuresGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 30px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.featureCard {
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	text-align: center;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.3s ease;
+}
+
+.featureCard:hover {
+	transform: translateY(-5px);
+}
+
+.featureCard i {
+	font-size: 2.5rem;
+	color: black;
+	margin-bottom: 20px;
+}
+
+.featureCard h3 {
+	font-size: 1.5rem;
+	margin-bottom: 15px;
+	color: #1f2937;
+}
+
+.featureCard p {
+	color: #6b7280;
+	line-height: 1.6;
+}
+
+/* Statistics Section */
+.statsSection {
+	padding: 80px 20px;
+	background-color: white;
+	overflow: hidden;
+}
+
+.statsContainer {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 30px;
+	max-width: 1200px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.statItem h3 {
+	font-size: 2.5rem;
+	color: black;
+	margin-bottom: 10px;
+}
+
+.statItem p {
+	color: #6b7280;
+	font-size: 1.1rem;
+}
+
+/* CTA Section */
+.ctaSection {
+	background: #f2f2f2;
+	color: black;
+	padding: 80px 20px;
+	text-align: center;
+	overflow: hidden;
+}
+
+.ctaSection h2 {
+	font-size: 2.5rem;
+	margin-bottom: 20px;
+}
+
+.ctaSection p {
+	font-size: 1.25rem;
+	margin-bottom: 30px;
+	opacity: 0.9;
+}
+
+/* Responsive Design for Hero Section */
+@media (max-width: 1200px) {
+	.heroContent {
+		padding: 0 30px;
+		gap: 40px;
+	}
+
+	.heroTextContainer h1 {
+		font-size: 3.5rem;
+	}
+
+	.heroCard1,
+	.heroCard2 {
+		width: 180px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.heroSection {
+		padding: 100px 20px;
+	}
+
+	.heroContent {
+		flex-direction: column;
+		text-align: center;
+		gap: 2rem;
+	}
+
+	.heroTextContainer {
+		max-width: 100%;
+	}
+
+	.heroTextContainer h1 {
+		font-size: 2.5rem;
+	}
+
+	.heroButtons {
+		justify-content: center;
+	}
+
+	.heroCard {
+		display: none;
+	}
+}
+
+@media (max-width: 768px) {
+	.heroSection {
+		padding: 1rem;
+	}
+
+	.heroTextContainer h1 {
+		font-size: 2rem;
+	}
+
+	.heroTextContainer p {
+		font-size: 1rem;
+	}
+
+	.heroButtons {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (max-width: 480px) {
+	.heroSection {
+		padding: 60px 15px;
+	}
+
+	.heroTextContainer h1 {
+		font-size: 2rem;
+	}
+
+	.heroLogo {
+		max-width: 280px;
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-20px);
+	}
+}
+
+@keyframes bounce {
+	0%,
+	20%,
+	50%,
+	80%,
+	100% {
+		transform: translateY(0);
+	}
+	40% {
+		transform: translateY(-10px);
+	}
+	60% {
+		transform: translateY(-5px);
+	}
+}

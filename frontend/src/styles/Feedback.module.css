@@ -1,0 +1,77 @@
+.feedbackContainer {
+	padding: 2rem 0;
+	min-height: calc(100vh - 60px);
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.pageTitle {
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #1a1a1a;
+	margin-bottom: 1rem;
+}
+
+.pageDescription {
+	font-size: 1.1rem;
+	color: #666;
+	max-width: 800px;
+	margin-bottom: 2rem;
+}
+
+.feedbackForm {
+	background: white;
+	padding: 2rem;
+	border-radius: 12px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton {
+	background-color: #cb172a;
+	color: white;
+	padding: 0.8rem 2rem;
+	font-size: 1.1rem;
+	transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+	background-color: #a31322;
+}
+
+.successMessage {
+	text-align: center;
+	padding: 3rem;
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.newFeedbackButton {
+	margin-top: 2rem;
+	color: #cb172a;
+	border-color: #cb172a;
+}
+
+.newFeedbackButton:hover {
+	background-color: rgba(203, 23, 42, 0.04);
+	border-color: #cb172a;
+}
+
+@media (max-width: 768px) {
+	.feedbackContainer {
+		padding: 1rem;
+	}
+
+	.pageTitle {
+		font-size: 2rem;
+	}
+
+	.feedbackForm {
+		padding: 1.5rem;
+	}
+
+	.submitButton {
+		width: 100%;
+	}
+}

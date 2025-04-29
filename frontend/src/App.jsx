@@ -1,21 +1,24 @@
 import React from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Support from './components/UserExpirience/Support'
 import './index.css'
 import AdminDashboard from './Moderation/Admin/pages/AdminDashboard'
 import SupportDashboard from './Moderation/Support/pages/SupportDashboard'
 import { Login } from './pages/Auth/Login'
 import { Registration } from './pages/Auth/Registr'
 import { ResetPassword } from './pages/Auth/ResetPassword'
+import ContactFreelancer from './pages/ContactFreelancer/ContactFreelancer'
 import Donate from './pages/Donate'
 import FAQ from './pages/FAQ'
+import Feedback from './pages/Feedback'
 import { Games } from './pages/Match/Games'
 import { Match } from './pages/Match/Match'
 import { Matches } from './pages/Match/Matches'
 import { Stake } from './pages/Match/Stake'
 import { News } from './pages/News/News'
 import { NewsContent } from './pages/News/NewsContent'
+import CreateProject from './pages/Projects/CreateProject'
+import SearchFreelancers from './pages/SearchFreelancers/SearchFreelancers'
 import { Erorpage } from './pages/User/404'
 import Balance from './pages/User/Balance'
 import { Home } from './pages/User/Home'
@@ -46,8 +49,11 @@ const App = () => {
 				<Route path='/Balance' element={<Balance />} />
 				<Route path='/Donate' element={<Donate />} />
 				<Route path='/ResetPassword' element={<ResetPassword />} />
-				<Route path='/Feedback' element={<Support />} />
+				<Route path='/Feedback' element={<Feedback />} />
 				<Route path='/FAQ' element={<FAQ />} />
+				<Route path='/create-project' element={<CreateProject />} />
+				<Route path='/search-freelancers' element={<SearchFreelancers />} />
+				<Route path='/contact-freelancer' element={<ContactFreelancer />} />
 				<Route path='*' element={<Erorpage />} />
 
 				{/* Захищені адмінські маршрути */}

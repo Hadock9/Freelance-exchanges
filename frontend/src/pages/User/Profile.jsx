@@ -1,14 +1,21 @@
 import { motion } from 'framer-motion'
-import { UkrainianWar } from '../../components/UserExpirience/BlockSaveUkraine'
 
 import { jwtDecode } from 'jwt-decode'
-import { UserRound } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
+import {
+	FaAward,
+	FaBriefcase,
+	FaHistory,
+	FaMapMarkerAlt,
+	FaStar,
+} from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
+import BurgerMenu from '../../components/BurgerMenu'
 import MyLoader from '../../components/Disclaimer/Loader'
 import { NotAuthorized } from '../../components/Disclaimer/NotAuthorized'
+import Footer from '../../components/UserExpirience/Footer'
 import NavBar from '../../components/UserExpirience/NavBar'
 import { useAuth } from '../../context/AuthContext'
 import useFetchGet from '../../hooks/useFetchGet'
@@ -19,10 +26,11 @@ import {
 	validatePhone,
 } from '../../js/FormValidation'
 import { formatDate } from '../../js/TimeValidation'
-import style from '../../styles/User/Profile.module.css'
+import rootstyle from '../../styles/root.module.css'
 
 export function Profile() {
 	const navigate = useNavigate()
+	const [activeTab, setActiveTab] = useState('history')
 
 	const [FormValid, setFormValid] = useState(false)
 	const { setIsRegUser, setUser, user, isRegUser } = useAuth()
@@ -192,233 +200,230 @@ export function Profile() {
 		return <MyLoader />
 	}
 
+	const renderStars = rating => {
+		const stars = []
+		const fullStars = Math.floor(rating)
+		const hasHalfStar = rating % 1 >= 0.5
+
+		for (let i = 0; i < fullStars; i++) {
+			stars.push(
+				<FaStar key={`star-${i}`} className='h-5 w-5 text-yellow-400' />
+			)
+		}
+
+		if (hasHalfStar) {
+			stars.push(<FaStar key='half-star' className='h-5 w-5 text-yellow-400' />)
+		}
+
+		const emptyStars = 5 - stars.length
+		for (let i = 0; i < emptyStars; i++) {
+			stars.push(
+				<FaStar key={`empty-star-${i}`} className='h-5 w-5 text-gray-300' />
+			)
+		}
+
+		return stars
+	}
+
 	return (
-		<>
-			<NavBar /> {/* Навігаційна панель */}
-			<UkrainianWar />
-			<div className={style.ProfileBg}>
-				{/* Фон профілю */}
-				<div className={style.ProfileBlock}>
-					{/* Основний блок профілю */}
-					<div className='mt-[-60px] mb-8 h-[96px] w-[96px] flex justify-center items-center bg-white rounded-[50%]'>
-						{/* Зображення профілю */}
-						{formData.pictureSrc ? (
-							<img
-								className='max-w-full h-auto rounded-full'
-								src={formData.pictureSrc}
-								alt=''
-							/>
-						) : (
-							<UserRound width={46} height={46} />
-						)}
-
-						<div>{/* Зображення профілю */}</div>
-					</div>
-
-					<form className={style.form} onSubmit={handleSave}>
-						{/* Форма редагування профілю */}
-						<div className={style.ProfileBlockInfo}>
-							<div className={style.ProfileBlockTextFirst}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>ID</label>
-									<input
-										className={style.CustomInput}
-										type='text'
-										value={formData.id}
-										readOnly
-									/>
-								</div>
-							</div>
-						</div>
-						{First_NameDirty && First_NameError && (
-							<motion.div
-								initial={{ x: -100, scale: 0 }}
-								animate={{ x: 0, scale: 1 }}
-								transition={{ ease: 'easeIn', duration: 0.5 }}
-								className='inline-block my-2 p-2 text-red-600 bg-red-100 border border-red-300 rounded-md mx-4'
-							>
-								{First_NameError}
-							</motion.div>
-						)}
-						{Last_NameDirty && Last_NameError && (
-							<motion.div
-								initial={{ x: -100, scale: 0 }}
-								animate={{ x: 0, scale: 1 }}
-								transition={{ ease: 'easeIn', duration: 0.5 }}
-								className='inline-block my-2 p-2 text-red-600 bg-red-100 border border-red-300 rounded-md mx-4'
-							>
-								{Last_NameError}
-							</motion.div>
-						)}
-						<div className={style.ProfileBlockInfo}>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Ім'я</label>
-									<input
-										className={style.CustomInput}
-										type='text'
-										name='firstName'
-										value={formData.firstName}
-										onBlur={setFirst_NameDirty}
-										onChange={First_NameHandler}
-										placeholder=' '
-										required
-									/>
-								</div>
-							</div>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Прізвище</label>
-									<input
-										className={style.CustomInput}
-										type='text'
-										name='lastName'
-										onBeforeInput={setLast_NameDirty}
-										value={formData.lastName}
-										onChange={Last_NameHandler}
-										placeholder=' '
-										required
-									/>
-								</div>
-							</div>
-						</div>
-						{Date_of_birthDirty && Date_of_birthError && (
-							<motion.div
-								initial={{ x: -100, scale: 0 }}
-								animate={{ x: 0, scale: 1 }}
-								transition={{ ease: 'easeIn', duration: 0.5 }}
-								className='  my-2 p-2 text-red-600 bg-red-100 border border-red-300 rounded-md mx-4 width-[100%]'
-							>
-								{Date_of_birthError}
-							</motion.div>
-						)}
-						<div className={style.ProfileBlockInfo}>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Дата народження</label>
-									<input
-										className={style.CustomInput}
-										type='date'
-										name='date_of_birth'
-										onBlur={setDate_of_birthDirty}
-										value={formData.date_of_birth}
-										onChange={Date_of_birthHandler}
-										placeholder=' '
-										required
-									/>
-								</div>
-							</div>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Стать</label>
-									<select
-										className={style.CustomInput}
-										name='gender'
-										value={formData.gender}
-										onChange={handleChange}
-										required
-									>
-										<option value=''>Виберіть стать</option>
-										<option value='Чоловіча'>Чоловіча</option>
-										<option value='Жіноча'>Жіноча</option>
-										<option value='Інша'>Інша</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div className={style.ProfileBlockInfo}>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Ел. Пошта</label>
-									<input
-										className={style.CustomInput}
-										type='email'
-										name='email'
-										value={formData.email}
-										placeholder=''
-										readOnly
-									/>
-								</div>
-							</div>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Дата реєстрації</label>
-									<input
-										className={style.CustomInput}
-										type='text'
-										name='created_at'
-										value={formData.created_at}
-										onChange={handleChange}
-										readOnly
-									/>
-								</div>
-							</div>
-						</div>
-						{PhoneDirty && PhoneError && (
-							<motion.div
-								initial={{ x: -100, scale: 0 }}
-								animate={{ x: 0, scale: 1 }}
-								transition={{ ease: 'easeIn', duration: 0.5 }}
-								className='  my-2 p-2 text-red-600 bg-red-100 border border-red-300 rounded-md mx-4 width-[100%]'
-							>
-								{PhoneError}
-							</motion.div>
-						)}
-						{CountryDirty && CountryError && (
-							<motion.div
-								initial={{ x: -100, scale: 0 }}
-								animate={{ x: 0, scale: 1 }}
-								transition={{ ease: 'easeIn', duration: 0.5 }}
-								className='  my-2 p-2 text-red-600 bg-red-100 border border-red-300 rounded-md mx-4 width-[100%]'
-							>
-								{CountryError}
-							</motion.div>
-						)}
-						<div className={style.ProfileBlockInfo}>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Номер телефону</label>
-									<input
-										className={style.CustomInput}
-										type='tel'
-										name='phone'
-										value={formData.phone}
-										onBlur={setPhoneDirty}
-										onChange={PhoneHandler}
-										placeholder=' '
-										required
-									/>
-								</div>
-							</div>
-							<div className={style.ProfileBlockText}>
-								<div className={style.LabelInput}>
-									<label className={style.CustomLabel}>Країна</label>
-									<div className='mt-[-9px] ml-[-9px]'>
-										<CountrySelector
-											value={formData.country}
-											onChange={CountryHandler}
+		<div className={rootstyle.wrapper}>
+			<NavBar />
+			<div className={rootstyle.Container}>
+				<BurgerMenu />
+				<main className={rootstyle.Main}>
+					<div className='container mx-auto px-4 py-8 max-w-6xl'>
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5 }}
+							className='bg-white rounded-xl shadow-lg overflow-hidden mb-8'
+						>
+							<div className='p-6'>
+								<div className='flex flex-col md:flex-row gap-6'>
+									<div className='flex-shrink-0'>
+										<img
+											src={
+												UserProfile.picture || 'https://via.placeholder.com/150'
+											}
+											alt={`${UserProfile.first_name} ${UserProfile.last_name}`}
+											className='w-32 h-32 rounded-full border border-gray-200'
 										/>
+									</div>
+									<div className='flex-grow'>
+										<h1 className='text-3xl font-bold text-gray-800 mb-2'>
+											{UserProfile.first_name} {UserProfile.last_name}
+										</h1>
+										<p className='text-xl text-gray-600 mb-2'>
+											{UserProfile.title || 'Фрілансер'}
+										</p>
+
+										<div className='flex items-center mb-2'>
+											<div className='flex mr-2'>
+												{renderStars(UserProfile.rating || 0)}
+											</div>
+											<span className='text-sm text-gray-500'>
+												({UserProfile.rating || 0})
+											</span>
+										</div>
+
+										<div className='flex items-center text-gray-600 mb-2'>
+											<FaMapMarkerAlt className='mr-2 text-gray-400' />
+											<span>{UserProfile.country || 'Не вказано'}</span>
+										</div>
+
+										<div className='flex items-center text-gray-600 mb-2'>
+											<FaBriefcase className='mr-2 text-gray-400' />
+											<span>
+												{UserProfile.completed_projects || 0} виконаних проектів
+											</span>
+										</div>
+
+										<p className='text-gray-600 mt-4'>
+											{UserProfile.description || 'Опис відсутній'}
+										</p>
+
+										<div className='flex flex-wrap gap-2 mt-4'>
+											{UserProfile.skills && UserProfile.skills.length > 0 ? (
+												UserProfile.skills.map(skill => (
+													<span
+														key={skill}
+														className='px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm'
+													>
+														{skill}
+													</span>
+												))
+											) : (
+												<span className='text-gray-500'>
+													Навички не вказані
+												</span>
+											)}
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</motion.div>
 
-						<div className={style.ProfileBlockInfo}>
-							<motion.button
-								whileTap={{ scale: 0.9 }}
-								initial={{ scale: 1 }}
-								type='submit'
-								disabled={!FormValid}
-								className={`mt-4 w-[100%] mx-4 h-[44px] bg-primary text-white border-none cursor-pointer rounded-md transition-all duration-300
-									disabled:bg-gray-300 disabled:cursor-not-allowed`}
-							>
-								Зберегти зміни {/* Кнопка для збереження змін */}
-							</motion.button>
+						<div className='bg-white rounded-xl shadow-lg overflow-hidden'>
+							<div className='border-b border-gray-200'>
+								<div className='flex'>
+									<button
+										onClick={() => setActiveTab('history')}
+										className={`flex-1 py-4 px-6 text-center font-medium ${
+											activeTab === 'history'
+												? 'text-yellow-500 border-b-2 border-yellow-500'
+												: 'text-gray-500 hover:text-gray-700'
+										}`}
+									>
+										<FaHistory className='inline-block mr-2' />
+										Історія проектів
+									</button>
+									<button
+										onClick={() => setActiveTab('achievements')}
+										className={`flex-1 py-4 px-6 text-center font-medium ${
+											activeTab === 'achievements'
+												? 'text-yellow-500 border-b-2 border-yellow-500'
+												: 'text-gray-500 hover:text-gray-700'
+										}`}
+									>
+										<FaAward className='inline-block mr-2' />
+										Досягнення
+									</button>
+								</div>
+							</div>
+
+							<div className='p-6'>
+								{activeTab === 'history' ? (
+									<div className='space-y-6'>
+										{UserProfile.project_history &&
+										UserProfile.project_history.length > 0 ? (
+											UserProfile.project_history.map(project => (
+												<motion.div
+													key={project.id}
+													initial={{ opacity: 0, y: 10 }}
+													animate={{ opacity: 1, y: 0 }}
+													transition={{ duration: 0.3 }}
+													className='border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow'
+												>
+													<div className='flex justify-between items-start mb-3'>
+														<div>
+															<h3 className='text-lg font-semibold text-gray-800'>
+																{project.projectName}
+															</h3>
+															<p className='text-gray-600'>
+																Клієнт: {project.client}
+															</p>
+														</div>
+														<div className='text-right'>
+															<p className='text-sm text-gray-500'>
+																{formatDate(project.date)}
+															</p>
+															<p className='text-lg font-semibold text-yellow-500'>
+																${project.earnings}
+															</p>
+														</div>
+													</div>
+
+													<div className='flex items-center mb-2'>
+														<div className='flex mr-2'>
+															{renderStars(project.rating)}
+														</div>
+														<span className='text-sm text-gray-500'>
+															({project.rating})
+														</span>
+													</div>
+
+													<p className='text-gray-600 italic'>
+														"{project.review}"
+													</p>
+												</motion.div>
+											))
+										) : (
+											<div className='text-center py-8 text-gray-500'>
+												<p>Історія проектів відсутня</p>
+											</div>
+										)}
+									</div>
+								) : (
+									<div className='space-y-6'>
+										{UserProfile.achievements &&
+										UserProfile.achievements.length > 0 ? (
+											UserProfile.achievements.map(achievement => (
+												<motion.div
+													key={achievement.id}
+													initial={{ opacity: 0, y: 10 }}
+													animate={{ opacity: 1, y: 0 }}
+													transition={{ duration: 0.3 }}
+													className='border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow'
+												>
+													<div className='flex justify-between items-start'>
+														<div>
+															<h3 className='text-lg font-semibold text-gray-800'>
+																{achievement.title}
+															</h3>
+															<p className='text-gray-600'>
+																{achievement.description}
+															</p>
+														</div>
+														<p className='text-sm text-gray-500'>
+															{formatDate(achievement.date)}
+														</p>
+													</div>
+												</motion.div>
+											))
+										) : (
+											<div className='text-center py-8 text-gray-500'>
+												<p>Досягнення відсутні</p>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
 						</div>
-					</form>
-				</div>
+					</div>
+				</main>
 			</div>
-		</>
+			<Footer />
+		</div>
 	)
 }
 

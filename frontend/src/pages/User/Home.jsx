@@ -1,34 +1,48 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import BurgerMenu from '../../components/BurgerMenu'
 import { UkrainianWar } from '../../components/UserExpirience/BlockSaveUkraine'
 import Footer from '../../components/UserExpirience/Footer'
-import { MotionFireLogo } from '../../components/UserExpirience/MotionFireLogo'
 import NavBar from '../../components/UserExpirience/NavBar'
-import useFetchGet from '../../hooks/useFetchGet'
+import { useAuth } from '../../context/AuthContext'
+import styles from '../../styles/Home.module.css'
 import rootstyle from '../../styles/root.module.css'
+import MyButton from '../../UI/Mybutton'
 
-export function Home() {
-	const heroTextAnimation = {
-		hidden: {
-			x: -100,
-			opacity: 0,
-		},
+export const Home = () => {
+	const { user, isRegUser } = useAuth()
+	const [scrollY, setScrollY] = useState(0)
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrollY(window.scrollY)
+		}
+		window.addEventListener('scroll', handleScroll)
+		return () => window.removeEventListener('scroll', handleScroll)
+	}, [])
+
+	const heroTextVariants = {
+		hidden: { opacity: 0, y: 20 },
 		visible: {
-			x: 0,
 			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.8,
+				ease: 'easeOut',
+			},
 		},
 	}
 
-	const heroImageAnimation = {
-		hidden: {
-			x: 100,
-			opacity: 0,
-		},
+	const heroImageVariants = {
+		hidden: { opacity: 0, scale: 0.8 },
 		visible: {
-			x: 0,
 			opacity: 1,
+			scale: 1,
+			transition: {
+				duration: 0.8,
+				ease: 'easeOut',
+			},
 		},
 	}
 
@@ -44,13 +58,12 @@ export function Home() {
 		}),
 	}
 
-	const [games, setGames] = useState([])
-	const { Data, isLoading, failedToFetch } = useFetchGet({
-		url: 'http://localhost:4000/api/games/Games_List',
-	})
-	useEffect(() => {
-		setGames(Data)
-	}, [Data])
+	const scrollToFeatures = () => {
+		const featuresSection = document.querySelector(`.${styles.featuresSection}`)
+		if (featuresSection) {
+			featuresSection.scrollIntoView({ behavior: 'smooth' })
+		}
+	}
 
 	return (
 		<div className={rootstyle.wrapper}>
@@ -59,66 +72,202 @@ export function Home() {
 			<div className={rootstyle.Container}>
 				<BurgerMenu />
 				<main className={rootstyle.Main}>
-					<motion.section
-						initial='hidden'
-						whileInView='visible'
-						viewport={{ once: true }}
-						className='flex flex-col-reverse md:flex-row items-center  justify-between bg-gray-100 py-16 px-6 md:px-12'
-					>
-						<motion.div
-							variants={heroTextAnimation}
-							className='md:w-1/2 flex flex-col items-start text-left'
+					<div className={styles.homeContainer}>
+						<section className={styles.heroSection}>
+							<div className={styles.heroShape + ' ' + styles.heroShape1}></div>
+							<div className={styles.heroShape + ' ' + styles.heroShape2}></div>
+
+							<div className={styles.heroContent}>
+								<motion.div
+									className={styles.heroTextContainer}
+									initial='hidden'
+									animate='visible'
+									variants={heroTextVariants}
+								>
+									<div className={styles.heroBadge}>
+										<i className='fas fa-crown'></i>
+										<span>Преміум платформа</span>
+									</div>
+									<h1>
+										Знайдіть ідеального <span>Фрілансера</span> для вашого
+										проекту
+									</h1>
+									<p>
+										З'єднайтеся з талановитими професіоналами з усього світу.
+										Опублікуйте свій проект і отримайте пропозиції від
+										кваліфікованих фрілансерів за лічені хвилини.
+									</p>
+									<div className={styles.heroButtons}>
+										<Link to='/create-project'>
+											<MyButton style={{ width: '200px', textAlign: 'center' }}>
+												<i className='fas fa-plus'></i> Створити проект
+											</MyButton>
+										</Link>
+										<Link to='/search-freelancers'>
+											<MyButton style={{ width: '200px', textAlign: 'center' }}>
+												<i className='fas fa-search'></i> Знайти фрілансерів
+											</MyButton>
+										</Link>
+									</div>
+								</motion.div>
+
+								<motion.div
+									className={styles.heroLogoContainer}
+									initial='hidden'
+									animate='visible'
+									variants={heroImageVariants}
+								>
+									<div className={styles.heroCard}>
+										<h3 className={styles.heroCardTitle}>Безпечні платежі</h3>
+										<p className={styles.heroCardText}>
+											Ваші платежі захищені нашою системою ескроу
+										</p>
+									</div>
+								</motion.div>
+							</div>
+						</section>
+
+						{/* Features Section */}
+						<motion.section
+							className={styles.featuresSection}
+							initial='hidden'
+							whileInView='visible'
+							viewport={{ once: true }}
 						>
-							<h1 className='text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-4'>
-								Вітаємо на нашій платформі для фрілансерів
-							</h1>
-							<p className='text-gray-600 text-lg mb-6'>
-								Досліджуйте можливості нашого сервісу, який допоможе вам знайти
-								ідеальні проекти та досягнути своїх цілей у світі фрілансу.
-								Почніть свою кар'єру вже сьогодні!
-							</p>
-							<Link
-								to='/Games'
-								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300'
-							>
-								Почати
-							</Link>
-						</motion.div>
-						<motion.div
-							variants={heroImageAnimation}
-							className='md:w-1/4 flex justify-center md:justify-end mb-8 md:mb-0'
+							<motion.h2 variants={infoAnimation} custom={1}>
+								Чому обирають нашу платформу
+							</motion.h2>
+							<div className={styles.featuresGrid}>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={2}
+								>
+									<i className='fas fa-shield-alt'></i>
+									<h3>Безпечні платежі</h3>
+									<p>Ваші платежі захищені нашою системою ескроу</p>
+								</motion.div>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={3}
+								>
+									<i className='fas fa-users'></i>
+									<h3>Перевірені фрілансери</h3>
+									<p>Працюйте з перевіреними професіоналами</p>
+								</motion.div>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={4}
+								>
+									<i className='fas fa-clock'></i>
+									<h3>Швидка доставка</h3>
+									<p>Отримайте свою роботу швидко та ефективно</p>
+								</motion.div>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={5}
+								>
+									<i className='fas fa-headset'></i>
+									<h3>Підтримка 24/7</h3>
+									<p>Наша команда підтримки завжди готова допомогти</p>
+								</motion.div>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={6}
+								>
+									<i className='fas fa-star'></i>
+									<h3>Система рейтингів</h3>
+									<p>Оцінюйте та отримуйте оцінки за якість роботи</p>
+								</motion.div>
+								<motion.div
+									className={styles.featureCard}
+									variants={infoAnimation}
+									custom={7}
+								>
+									<i className='fas fa-comments'></i>
+									<h3>Зручна комунікація</h3>
+									<p>Вбудований чат для ефективної взаємодії</p>
+								</motion.div>
+							</div>
+						</motion.section>
+
+						{/* Statistics Section */}
+						<motion.section
+							className={styles.statsSection}
+							initial='hidden'
+							whileInView='visible'
+							viewport={{ once: true }}
 						>
-							<MotionFireLogo />
-						</motion.div>
-					</motion.section>
-					<motion.div
-						initial='hidden'
-						whileInView='visible'
-						viewport={{ once: true }}
-						className='flex flex-col items-center justify-center bg-gray-100 px-6 py-12'
-					>
-						<div className='w-16 h-1 bg-blue-600 rounded mb-8'></div>
-						<div className='text-center max-w-2xl'>
-							<motion.p
-								custom={1}
-								variants={infoAnimation}
-								className='text-2xl font-bold text-gray-800 mb-4'
-							>
-								Що ми пропонуємо
+							<div className={styles.statsContainer}>
+								<motion.div
+									className={styles.statItem}
+									variants={infoAnimation}
+									custom={1}
+								>
+									<h3>10K+</h3>
+									<p>Активних фрілансерів</p>
+								</motion.div>
+								<motion.div
+									className={styles.statItem}
+									variants={infoAnimation}
+									custom={2}
+								>
+									<h3>5K+</h3>
+									<p>Завершених проектів</p>
+								</motion.div>
+								<motion.div
+									className={styles.statItem}
+									variants={infoAnimation}
+									custom={3}
+								>
+									<h3>98%</h3>
+									<p>Задоволених клієнтів</p>
+								</motion.div>
+								<motion.div
+									className={styles.statItem}
+									variants={infoAnimation}
+									custom={4}
+								>
+									<h3>50+</h3>
+									<p>Країн</p>
+								</motion.div>
+							</div>
+						</motion.section>
+
+						{/* CTA Section */}
+						<motion.section
+							className={styles.ctaSection}
+							initial='hidden'
+							whileInView='visible'
+							viewport={{ once: true }}
+						>
+							<motion.h2 variants={infoAnimation} custom={1}>
+								Готові почати?
+							</motion.h2>
+							<motion.p variants={infoAnimation} custom={2}>
+								Приєднуйтесь до тисяч задоволених клієнтів та фрілансерів
 							</motion.p>
-							<motion.p
-								custom={2}
-								variants={infoAnimation}
-								className='text-lg text-gray-700 leading-relaxed'
-							>
-								Ми пропонуємо унікальні можливості для фрілансерів і замовників.
-								Наша платформа забезпечує високий рівень безпеки та зручності,
-								щоб ви могли зосередитися на своїй роботі або пошуку талановитих
-								виконавців. Розвивайте свою кар'єру або реалізовуйте проекти
-								разом з нами!
-							</motion.p>
-						</div>
-					</motion.div>
+							<motion.div variants={infoAnimation} custom={3}>
+								{isRegUser ? (
+									<Link to='/profile'>
+										<MyButton style={{ width: '250px', textAlign: 'center' }}>
+											Перейти до панелі керування
+										</MyButton>
+									</Link>
+								) : (
+									<Link to='/Login'>
+										<MyButton style={{ width: '200px', textAlign: 'center' }}>
+											Залогінитися
+										</MyButton>
+									</Link>
+								)}
+							</motion.div>
+						</motion.section>
+					</div>
 				</main>
 			</div>
 			<Footer />
