@@ -10,6 +10,8 @@ const {
 	getMatch_comments,
 	Create_Match_comment,
 	GET_LIST,
+	getFreelancer_comments,
+	Create_Freelancer_comment,
 } = require('../controllers/commentsController')
 const router = express.Router()
 
@@ -31,5 +33,8 @@ router.delete('/news_comments/DeleteStatus', DeleteStatus)
 
 // For react-admin
 router.get('/', GET_LIST)
+
+router.get('/freelancer_comments/:id/:user_id', getFreelancer_comments)
+router.post('/freelancer_comments/comment', Create_Freelancer_comment)
 
 module.exports = router

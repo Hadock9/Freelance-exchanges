@@ -21,6 +21,7 @@ import CreateProject from './pages/Projects/CreateProject'
 import SearchFreelancers from './pages/SearchFreelancers/SearchFreelancers'
 import { Erorpage } from './pages/User/404'
 import Balance from './pages/User/Balance'
+import FreelancerProfile from './pages/User/FreelancerProfile'
 import { Home } from './pages/User/Home'
 import Notifications from './pages/User/Notifications'
 import { Profile } from './pages/User/Profile'
@@ -54,6 +55,7 @@ const App = () => {
 				<Route path='/create-project' element={<CreateProject />} />
 				<Route path='/search-freelancers' element={<SearchFreelancers />} />
 				<Route path='/contact-freelancer' element={<ContactFreelancer />} />
+				<Route path='/freelancer/:id' element={<FreelancerProfile />} />
 				<Route path='*' element={<Erorpage />} />
 
 				{/* Захищені адмінські маршрути */}

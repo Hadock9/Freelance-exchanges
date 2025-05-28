@@ -294,7 +294,10 @@ export default function SearchFreelancers() {
 														<img
 															src={freelancer.avatar || '/img/User-Default.svg'}
 															alt={freelancer.name}
-															className='w-24 h-24 rounded-full border border-gray-200 object-cover'
+															className='w-24 h-24 rounded-full border border-gray-200 object-cover cursor-pointer'
+															onClick={() =>
+																navigate(`/freelancer/${freelancer.id}`)
+															}
 														/>
 													</div>
 													<div className='flex-grow'>

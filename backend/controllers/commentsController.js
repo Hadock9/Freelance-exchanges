@@ -281,3 +281,49 @@ exports.GET_LIST = (req, res) => {
 		})
 	})
 }
+
+// --- Коментарі до фрілансерів ---
+exports.getFreelancer_comments = (req, res) => {
+	const sql = `SELECT c.*, 
+		uld.action AS likedOrDisliked, 
+		u.first_name AS author, 
+		u.picture AS picture
+		FROM comments c
+		LEFT JOIN user_likes_dislikes uld 
+			ON c.id = uld.comment_id 
+			AND uld.user_id = ?
+		JOIN users u 
+			ON c.user_id = u.id
+		WHERE c.freelancer_id = ?;`
+	// req.params.id = freelancer_id, req.params.user_id = user_id
+	db.query(sql, [req.params.user_id, req.params.id], (err, result) => {
+		if (err) {
+			return res.status(500).json({ error: err.message })
+		}
+		res.json(result)
+	})
+}
+
+exports.Create_Freelancer_comment = async (req, res) => {
+	const { id, content, user_id } = req.body
+
+	// Перевірка: не дозволяти залишати коментар самому собі
+	const [rows] = await db
+		.promise()
+		.query('SELECT user_id FROM freelancers WHERE id = ?', [id])
+	if (rows.length && rows[0].user_id === user_id) {
+		return res
+			.status(400)
+			.json({ error: 'Ви не можете залишати коментар самому собі.' })
+	}
+
+	const sql =
+		'INSERT INTO comments (user_id, content, freelancer_id, publish_date) VALUES (?, ?, ?, NOW())'
+	db.query(sql, [user_id, content, id], (err, result) => {
+		if (err) {
+			console.error('Error inserting freelancer comment:', err)
+			return res.status(500).json({ error: 'Database error' })
+		}
+		return res.status(201).json({ id: result.insertId })
+	})
+}

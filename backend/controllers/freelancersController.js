@@ -29,8 +29,8 @@ exports.getFreelancers = async (req, res) => {
 
 		// Пошук за навичками або описом
 		if (search) {
-			query += ` AND (f.title LIKE ? OR f.description LIKE ? OR JSON_SEARCH(f.skills, 'one', ?) IS NOT NULL)`
-			queryParams.push(`%${search}%`, `%${search}%`, search)
+			query += ` AND (f.title LIKE ? OR f.description LIKE ? OR f.id IN (SELECT fs.freelancer_id FROM freelancer_skills fs JOIN skills s ON fs.skill_id = s.id WHERE s.name LIKE ?))`
+			queryParams.push(`%${search}%`, `%${search}%`, `%${search}%`)
 		}
 
 		// Фільтр за категорією
@@ -79,12 +79,31 @@ exports.getFreelancers = async (req, res) => {
 			.query(countQuery, queryParams.slice(0, -2))
 		const totalCount = total.length
 
+		// Отримуємо скіли для всіх фрілансерів
+		const freelancerIds = freelancers.map(f => f.id)
+		let skillsMap = {}
+		if (freelancerIds.length) {
+			const [skillsRows] = await db
+				.promise()
+				.query(
+					`SELECT fs.freelancer_id, s.name FROM freelancer_skills fs JOIN skills s ON fs.skill_id = s.id WHERE fs.freelancer_id IN (${freelancerIds
+						.map(() => '?')
+						.join(',')})`,
+					freelancerIds
+				)
+			skillsMap = skillsRows.reduce((acc, row) => {
+				if (!acc[row.freelancer_id]) acc[row.freelancer_id] = []
+				acc[row.freelancer_id].push(row.name)
+				return acc
+			}, {})
+		}
+
 		// Форматування даних фрілансерів
 		const formattedFreelancers = freelancers.map(freelancer => ({
 			...freelancer,
 			rating: Number(freelancer.rating) || 0,
 			hourly_rate: Number(freelancer.hourly_rate) || 0,
-			skills: JSON.parse(freelancer.skills || '[]'),
+			skills: skillsMap[freelancer.id] || [],
 			name:
 				`${freelancer.first_name || ''} ${freelancer.last_name || ''}`.trim() ||
 				'Анонімний користувач',
@@ -126,12 +145,20 @@ exports.getFreelancerById = async (req, res) => {
 			return res.status(404).json({ error: 'Фрілансер не знайдено' })
 		}
 
+		// Отримуємо скіли для фрілансера
+		const [skillsRows] = await db
+			.promise()
+			.query(
+				`SELECT s.name FROM freelancer_skills fs JOIN skills s ON fs.skill_id = s.id WHERE fs.freelancer_id = ?`,
+				[id]
+			)
+
 		// Форматування даних фрілансера
 		const formattedFreelancer = {
 			...freelancer[0],
 			rating: Number(freelancer[0].rating) || 0,
 			hourly_rate: Number(freelancer[0].hourly_rate) || 0,
-			skills: JSON.parse(freelancer[0].skills || '[]'),
+			skills: skillsRows.map(row => row.name),
 			name:
 				`${freelancer[0].first_name || ''} ${
 					freelancer[0].last_name || ''
@@ -159,39 +186,58 @@ exports.createOrUpdateFreelancerProfile = async (req, res) => {
 			.promise()
 			.query('SELECT id FROM freelancers WHERE user_id = ?', [userId])
 
+		let freelancerId
 		if (existing.length) {
 			// Оновлення існуючого профілю
 			await db.promise().query(
 				`UPDATE freelancers 
 				 SET title = ?, description = ?, hourly_rate = ?, 
-					 skills = ?, category = ?, location = ?
+					 category = ?, location = ?
 				 WHERE user_id = ?`,
-				[
-					title,
-					description,
-					hourly_rate,
-					JSON.stringify(skills),
-					category,
-					location,
-					userId,
-				]
+				[title, description, hourly_rate, category, location, userId]
 			)
+			freelancerId = existing[0].id
 		} else {
 			// Створення нового профілю
-			await db.promise().query(
+			const [result] = await db.promise().query(
 				`INSERT INTO freelancers 
-				 (user_id, title, description, hourly_rate, skills, category, location)
-				 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-				[
-					userId,
-					title,
-					description,
-					hourly_rate,
-					JSON.stringify(skills),
-					category,
-					location,
-				]
+				 (user_id, title, description, hourly_rate, category, location)
+				 VALUES (?, ?, ?, ?, ?, ?)`,
+				[userId, title, description, hourly_rate, category, location]
 			)
+			freelancerId = result.insertId
+		}
+
+		// Оновлюємо скіли (many-to-many)
+		if (Array.isArray(skills)) {
+			// Видаляємо старі скіли
+			await db
+				.promise()
+				.query('DELETE FROM freelancer_skills WHERE freelancer_id = ?', [
+					freelancerId,
+				])
+			// Додаємо нові скіли
+			for (const skillName of skills) {
+				// Знаходимо id скіла або створюємо новий
+				let [skillRows] = await db
+					.promise()
+					.query('SELECT id FROM skills WHERE name = ?', [skillName])
+				let skillId
+				if (skillRows.length) {
+					skillId = skillRows[0].id
+				} else {
+					const [insertSkill] = await db
+						.promise()
+						.query('INSERT INTO skills (name) VALUES (?)', [skillName])
+					skillId = insertSkill.insertId
+				}
+				await db
+					.promise()
+					.query(
+						'INSERT INTO freelancer_skills (freelancer_id, skill_id) VALUES (?, ?)',
+						[freelancerId, skillId]
+					)
+			}
 		}
 
 		res.json({ message: 'Профіль успішно оновлено' })

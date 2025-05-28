@@ -10,6 +10,7 @@ const userRoutes = require('./routes/user')
 const matchesRoutes = require('./routes/matches')
 const supportRoutes = require('./routes/support')
 const freelancersRoutes = require('./routes/freelancersRoutes')
+const skillsRoutes = require('./routes/skills')
 
 const path = require('path')
 
@@ -29,5 +30,6 @@ app.use('/api/notifications', notificationsRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/support', supportRoutes)
 app.use('/api/freelancers', freelancersRoutes)
+app.use('/api/skills', skillsRoutes)
 
 module.exports = app
