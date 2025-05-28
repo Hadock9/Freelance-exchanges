@@ -1,31 +1,27 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import toast from 'react-hot-toast'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
+import Loader from './modules/shared/components/Disclaimer/Loader'
 
-import Loader from './components/Disclaimer/Loader'
 const ProtectedRoute = ({ children, requiredRole }) => {
-	const { user, isLoading } = useAuth()
+	const { isAuthenticated, user, loading } = useContext(useAuth)
 
-	if (isLoading) {
-		return (
-			<div>
-				<Loader />
-			</div>
-		)
+	if (loading) {
+		return <Loader />
 	}
 
-	// Перевіряємо, чи користувач авторизований
-	if (!user) {
+	if (!isAuthenticated) {
 		toast.error('You need to be logged in to access this page')
 		return <Navigate to='/Login' />
 	}
+
 	if (user.role === 'developer') {
 		toast.success('Welcome developer :)')
 		return children
 	}
-	// Перевірка, чи має користувач потрібну роль
-	if (user.role !== requiredRole) {
+
+	if (requiredRole && user.role !== requiredRole) {
 		toast.error(
 			`You do not have permission to access this page. Your role is ${user.role}, but you need to be an ${requiredRole}.`
 		)
