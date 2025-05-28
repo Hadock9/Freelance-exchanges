@@ -25,7 +25,7 @@ function NavBar() {
 		{ link: '/News', name: 'Оголошення' }, // новини сервісу, нові проєкти
 		{ link: '/search-freelancers', name: 'Фрілансери' }, // пошук фрілансерів
 		{ link: '/categories', name: 'Категорії' }, // категорії фріланс-завдань
-		{ link: '/projects', name: 'Проєкти' }, // список доступних проєктів
+		{ link: '/projects', name: 'Мої проекти' },
 		{ link: '/my-bids', name: 'Мої заявки' }, // активні ставки на проєкти
 	]
 	return (

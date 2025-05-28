@@ -84,11 +84,12 @@ export function Login() {
 					},
 					body: JSON.stringify(LoginData),
 				})
-				console.log('Response OK:', response.ok)
+				console.log('Response status:', response.status)
 
 				let data
 				try {
 					data = await response.json()
+					console.log('Response data:', data)
 				} catch (err) {
 					console.error('Error parsing JSON:', err)
 					setGeneralError('Помилка обробки відповіді сервера.')
@@ -96,15 +97,15 @@ export function Login() {
 				}
 
 				if (response.ok) {
-					console.log('Успішний вхід')
+					console.log('Login successful, token:', data.token)
 					localStorage.setItem('token', data.token)
-					console.log('Вхід успішний:', data.message)
 					const decoded = jwtDecode(data.token)
+					console.log('Decoded token:', decoded)
 					setIsRegUser(true)
 					setUser(decoded)
 					navigate('/Home')
 				} else {
-					console.log('Помилка:', data.message)
+					console.log('Login failed:', data.message)
 					if (data.message && data.message.includes('Email not found')) {
 						setEmailError('Email не знайдено.')
 					} else if (
@@ -113,12 +114,12 @@ export function Login() {
 					) {
 						setPasswordError('Неправильний пароль.')
 					} else {
-						console.error('Помилка на сервері:', data)
+						console.error('Server error:', data)
 						setGeneralError('Помилка на сервері. Спробуйте пізніше.')
 					}
 				}
 			} catch (error) {
-				console.error('Помилка при відправці форми:', error)
+				console.error('Network error:', error)
 				setGeneralError("Помилка з'єднання з сервером.")
 			}
 		}

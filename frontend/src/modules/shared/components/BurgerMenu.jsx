@@ -7,6 +7,7 @@ import {
 	History,
 	House,
 	Mail,
+	MessageCircle,
 } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -21,6 +22,11 @@ const sideBarInfo = [
 	{ link: '/profile', icon: <CircleUserRound />, name: 'Профіль' },
 	{ link: '/Donate', icon: <Gift />, name: 'Підтримати' },
 	{ link: '/Notifications', icon: <Mail />, name: 'Повідомлення' },
+	{
+		link: '/chats',
+		icon: <MessageCircle className='w-6 h-6' />,
+		name: 'Чати',
+	},
 ]
 
 const Path = props => (

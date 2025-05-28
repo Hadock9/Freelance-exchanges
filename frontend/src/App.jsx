@@ -11,6 +11,9 @@ import Donate from './modules/shared/pages/Donate'
 import FAQ from './modules/shared/pages/FAQ'
 import Feedback from './modules/shared/pages/Feedback'
 // import SupportDashboard from './modules/support/pages/SupportDashboard/SupportDashboard'
+import Chats from './modules/chat/pages/Chats/Chats'
+import MyProjects from './modules/projects/pages/Projects/MyProjects'
+import Categories from './modules/shared/pages/Categories'
 import { Login } from './modules/user/pages/Auth/Login'
 import { Registration } from './modules/user/pages/Auth/Registr'
 import { ResetPassword } from './modules/user/pages/Auth/ResetPassword'
@@ -44,6 +47,9 @@ const App = () => {
 				<Route path='/contact-freelancer' element={<ContactFreelancer />} />
 				<Route path='/freelancer/:id' element={<FreelancerProfile />} />
 				<Route path='/profile' element={<Profile />} />
+				<Route path='/chats' element={<Chats />} />
+				<Route path='/projects' element={<MyProjects />} />
+				<Route path='/categories' element={<Categories />} />
 				<Route path='*' element={<Erorpage />} />
 
 				{/* Видалено адмінські маршрути */}

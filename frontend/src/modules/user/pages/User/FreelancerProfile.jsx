@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useAuth } from '../../../../context/AuthContext'
 import styles from '../../../../styles/shared/layout/root.module.css'
 import Comments from '../../../freelancers/components/Comments/Comments'
+import Reviews from '../../../freelancers/components/Reviews'
 import BurgerMenu from '../../../shared/components/BurgerMenu'
 import Loader from '../../../shared/components/Disclaimer/Loader'
 import Footer from '../../../user/components/UserExpirience/Footer'
@@ -155,6 +156,8 @@ const FreelancerProfile = () => {
 								</div>
 							</div>
 						</div>
+						{/* Відгуки */}
+						<Reviews freelancerId={freelancer.id} />
 						{/* Коментарі */}
 						<div className='bg-white rounded-xl shadow-lg overflow-hidden p-6 mt-8'>
 							<h2 className='text-2xl font-bold mb-4'>Коментарі</h2>

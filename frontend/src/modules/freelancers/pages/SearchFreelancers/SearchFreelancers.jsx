@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { FaBriefcase, FaMapMarkerAlt, FaSearch } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../../context/AuthContext'
 import styles from '../../../../styles/shared/layout/root.module.css'
+import Chat from '../../../chat/pages/Chat/Chat'
 import BurgerMenu from '../../../shared/components/BurgerMenu'
 import Footer from '../../../user/components/UserExpirience/Footer'
 import NavBar from '../../../user/components/UserExpirience/NavBar'
 
 export default function SearchFreelancers() {
 	const navigate = useNavigate()
+	const { user } = useAuth()
 	const [searchTerm, setSearchTerm] = useState('')
 	const [sortBy, setSortBy] = useState('rating')
 	const [priceRange, setPriceRange] = useState('all')
@@ -24,6 +28,7 @@ export default function SearchFreelancers() {
 		totalItems: 0,
 		itemsPerPage: 10,
 	})
+	const [selectedChat, setSelectedChat] = useState(null)
 
 	// Прибираю повторне оголошення page, limit, total
 	const currentPage = pagination?.page || page
@@ -115,8 +120,97 @@ export default function SearchFreelancers() {
 		window.scrollTo({ top: 0, behavior: 'smooth' })
 	}
 
-	const handleContact = freelancer => {
-		navigate('/contact-freelancer', { state: { freelancer } })
+	const handleContact = async freelancer => {
+		try {
+			const token = localStorage.getItem('token')
+			if (!token) {
+				toast.error(
+					"Будь ласка, увійдіть в систему щоб зв'язатися з фрілансером"
+				)
+				return
+			}
+
+			// Перевіряємо, чи користувач не намагається написати сам собі
+			if (user.id === freelancer.user_id) {
+				toast.error('Ви не можете написати самі собі')
+				return
+			}
+
+			// Перевіряємо існуючі чати
+			const existingChatsResponse = await fetch(
+				`http://localhost:4000/api/chat/user/${user.id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+
+			if (!existingChatsResponse.ok) {
+				throw new Error('Не вдалося отримати список чатів')
+			}
+
+			const existingChats = await existingChatsResponse.json()
+
+			// Перевіряємо кожен чат на наявність фрілансера
+			for (const chat of existingChats) {
+				const participantsResponse = await fetch(
+					`http://localhost:4000/api/chat/participants/${chat.id}`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+
+				if (!participantsResponse.ok) {
+					continue
+				}
+
+				const participants = await participantsResponse.json()
+				// Перевіряємо, чи є фрілансер серед учасників
+				if (participants.some(p => p.id === freelancer.user_id)) {
+					// Якщо знайшли чат з фрілансером, відкриваємо його
+					setSelectedChat(chat.id)
+					return
+				}
+			}
+
+			// Якщо чату немає, створюємо новий
+			const response = await fetch('http://localhost:4000/api/chat/rooms', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({}),
+			})
+
+			if (!response.ok) {
+				throw new Error('Не вдалося створити чат')
+			}
+
+			const { id: chatRoomId } = await response.json()
+
+			// Додаємо фрілансера до чату
+			await fetch('http://localhost:4000/api/chat/participants', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					chat_room_id: chatRoomId,
+					user_id: freelancer.user_id,
+				}),
+			})
+
+			// Відкриваємо чат у модальному вікні
+			setSelectedChat(chatRoomId)
+		} catch (error) {
+			console.error('Error creating chat:', error)
+			toast.error('Не вдалося створити чат')
+		}
 	}
 
 	// Функція для відображення зірок рейтингу
@@ -362,9 +456,7 @@ export default function SearchFreelancers() {
 														</div>
 
 														<button
-															onClick={() =>
-																navigate(`/chat/${freelancer.user_id}`)
-															}
+															onClick={() => handleContact(freelancer)}
 															className='w-[120px] bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors'
 														>
 															Зв'язатися
@@ -442,6 +534,26 @@ export default function SearchFreelancers() {
 				</main>
 			</div>
 			<Footer />
+
+			{/* Chat Modal */}
+			{selectedChat && (
+				<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+					<div className='bg-white rounded-lg w-full max-w-2xl h-[80vh] flex flex-col'>
+						<div className='flex justify-between items-center p-4 border-b'>
+							<h2 className='text-xl font-semibold'>Чат</h2>
+							<button
+								onClick={() => setSelectedChat(null)}
+								className='text-gray-500 hover:text-gray-700'
+							>
+								✕
+							</button>
+						</div>
+						<div className='flex-1 overflow-hidden'>
+							<Chat id={selectedChat} />
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

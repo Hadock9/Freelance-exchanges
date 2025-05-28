@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken')
-const secretKey =
-	'"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"'
 
 // Функція для генерації токена
 function generateToken(user) {
@@ -19,7 +17,7 @@ function generateToken(user) {
 			created_at: user.created_at,
 			role: user.role,
 		},
-		secretKey,
+		process.env.JWT_SECRET || 'your-secret-key',
 		{ expiresIn: '24h' }
 	)
 }
