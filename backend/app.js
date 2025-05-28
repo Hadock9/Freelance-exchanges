@@ -9,6 +9,7 @@ const notificationsRoutes = require('./routes/notifications')
 const userRoutes = require('./routes/user')
 const matchesRoutes = require('./routes/matches')
 const supportRoutes = require('./routes/support')
+const freelancersRoutes = require('./routes/freelancersRoutes')
 
 const path = require('path')
 
@@ -27,5 +28,6 @@ app.use('/api/comments', commentsRoutes)
 app.use('/api/notifications', notificationsRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/support', supportRoutes)
+app.use('/api/freelancers', freelancersRoutes)
 
 module.exports = app
