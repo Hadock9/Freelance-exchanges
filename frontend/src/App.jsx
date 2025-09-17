@@ -14,6 +14,7 @@ import Feedback from './modules/shared/pages/Feedback'
 import Chats from './modules/chat/pages/Chats/Chats'
 import MyProjects from './modules/projects/pages/Projects/MyProjects'
 import Categories from './modules/shared/pages/Categories'
+import ProjectDetails from './modules/shared/pages/ProjectDetails'
 import { Login } from './modules/user/pages/Auth/Login'
 import { Registration } from './modules/user/pages/Auth/Registr'
 import { ResetPassword } from './modules/user/pages/Auth/ResetPassword'
@@ -21,6 +22,7 @@ import { Erorpage } from './modules/user/pages/User/404'
 import Balance from './modules/user/pages/User/Balance'
 import FreelancerProfile from './modules/user/pages/User/FreelancerProfile'
 import { Home } from './modules/user/pages/User/Home'
+import MyBids from './modules/user/pages/User/MyBids'
 import Notifications from './modules/user/pages/User/Notifications'
 import Profile from './modules/user/pages/User/Profile'
 
@@ -50,6 +52,8 @@ const App = () => {
 				<Route path='/chats' element={<Chats />} />
 				<Route path='/projects' element={<MyProjects />} />
 				<Route path='/categories' element={<Categories />} />
+				<Route path='/project/:id' element={<ProjectDetails />} />
+				<Route path='/my-bids' element={<MyBids />} />
 				<Route path='*' element={<Erorpage />} />
 
 				{/* Видалено адмінські маршрути */}

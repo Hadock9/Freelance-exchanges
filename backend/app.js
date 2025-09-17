@@ -38,6 +38,7 @@ app.use('/api/skills', skillRoutes)
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/projects', require('./routes/projects'))
+app.use('/api/bids', require('./routes/bids'))
 
 // Обробка помилок
 app.use((err, req, res, next) => {

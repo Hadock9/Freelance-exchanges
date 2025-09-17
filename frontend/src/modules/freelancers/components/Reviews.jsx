@@ -87,7 +87,7 @@ const Reviews = ({ freelancerId }) => {
 							<div className='flex-grow'>
 								<div className='flex items-center gap-2 mb-1'>
 									<span className='font-semibold'>
-										Користувач {r.client_id}
+										{r.user_name ? r.user_name : `Користувач ${r.client_id}`}
 									</span>
 									<span className='flex gap-1'>
 										{[...Array(5)].map((_, i) => (

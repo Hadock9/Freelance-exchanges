@@ -4,7 +4,7 @@ const db = require('../db')
 exports.getFreelancerReviews = (req, res) => {
 	const { freelancerId } = req.params
 	db.query(
-		`SELECT r.*, u.picture as user_avatar FROM reviews r
+		`SELECT r.*, u.picture as user_avatar, u.first_name as user_name FROM reviews r
 		 JOIN users u ON r.client_id = u.id
 		 WHERE r.freelancer_id = ? ORDER BY r.created_at DESC`,
 		[freelancerId],

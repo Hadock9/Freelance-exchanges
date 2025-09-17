@@ -9,7 +9,7 @@ import {
 	Mail,
 	MessageCircle,
 } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMenu } from '../../../context/MenuContext'
 import styles from '../../../styles/shared/layout/BurgerMenu.module.css'
@@ -41,10 +41,16 @@ const Path = props => (
 
 function BurgerMenu() {
 	const { isOpen, setIsOpen } = useMenu()
+	const menuRef = useRef(null)
+	const [hovered, setHovered] = useState(false)
+	const [showIcon, setShowIcon] = useState(false)
 
-	const toggleMenu = () => {
-		setIsOpen(prev => !prev)
-	}
+	// Відкрити меню при наведенні
+	const handleMouseEnter = () => setIsOpen(true)
+	// Закрити меню при відведенні
+	const handleMouseLeave = () => setIsOpen(false)
+
+	const toggleMenu = () => setIsOpen(prev => !prev)
 
 	const containerVariants = {
 		hidden: {
@@ -75,6 +81,19 @@ function BurgerMenu() {
 		}
 	}, [isOpen, containerControls])
 
+	// Слухаємо рух миші по екрану для появи іконки
+	useEffect(() => {
+		const handleMouseMove = e => {
+			if (e.clientX <= 40) {
+				setShowIcon(true)
+			} else if (!hovered) {
+				setShowIcon(false)
+			}
+		}
+		window.addEventListener('mousemove', handleMouseMove)
+		return () => window.removeEventListener('mousemove', handleMouseMove)
+	}, [hovered])
+
 	const AnimatedText = ({ children }) => (
 		<motion.div
 			initial={{ opacity: 0, x: -20 }}
@@ -87,14 +106,23 @@ function BurgerMenu() {
 	)
 
 	return (
-		<motion.aside
-			initial='hidden' // Initial state
-			variants={containerVariants}
-			animate={containerControls}
-			className={styles.BurgerMenuContainer}
+		<div
+			style={{
+				position: 'fixed',
+				top: '100px',
+				left: 0,
+				zIndex: 50,
+				height: 'calc(100vh - 100px)',
+			}}
 		>
-			<div className={styles.AsideBlockBrowse} onClick={toggleMenu}>
-				<div className={styles.AsideBlockIconBrowse}>
+			{/* Бургер-іконка видно тільки якщо showIcon або hovered */}
+			{(showIcon || hovered) && (
+				<div
+					className={styles.AsideBlockIconBrowse}
+					onMouseEnter={() => setHovered(true)}
+					onMouseLeave={() => setHovered(false)}
+					style={{ position: 'relative', zIndex: 51 }}
+				>
 					<button className={styles.MenuToggleButton}>
 						<svg width='23' height='23' viewBox='0 0 23 23'>
 							<Path
@@ -103,7 +131,7 @@ function BurgerMenu() {
 									closed: { d: 'M 2 2.5 L 20 2.5' },
 									open: { d: 'M 3 16.5 L 17 2.5' },
 								}}
-								animate={isOpen ? 'open' : 'closed'}
+								animate={hovered ? 'open' : 'closed'}
 								transition={{ duration: 0.3 }}
 							/>
 							<Path
@@ -112,7 +140,7 @@ function BurgerMenu() {
 									closed: { opacity: 1 },
 									open: { opacity: 0 },
 								}}
-								animate={isOpen ? 'open' : 'closed'}
+								animate={hovered ? 'open' : 'closed'}
 								transition={{ duration: 0.1 }}
 							/>
 							<Path
@@ -121,28 +149,47 @@ function BurgerMenu() {
 									closed: { d: 'M 2 16.346 L 20 16.346' },
 									open: { d: 'M 3 2.5 L 17 16.346' },
 								}}
-								animate={isOpen ? 'open' : 'closed'}
+								animate={hovered ? 'open' : 'closed'}
 								transition={{ duration: 0.3 }}
 							/>
 						</svg>
 					</button>
 				</div>
-			</div>
-
-			{sideBarInfo.map((Item, index) => (
-				<motion.div
-					key={index}
-					initial={{ scale: 1 }}
-					whileHover={{ scale: 1.1 }}
-					whileTap={{ scale: 0.95 }}
+			)}
+			{/* Меню показується тільки при наведенні */}
+			{hovered && (
+				<motion.aside
+					ref={menuRef}
+					initial='hidden'
+					variants={containerVariants}
+					animate={containerControls}
+					className={styles.BurgerMenuContainer}
+					style={{
+						position: 'fixed',
+						top: '100px',
+						left: 0,
+						zIndex: 50,
+						height: 'calc(100vh - 100px)',
+					}}
+					onMouseEnter={() => setHovered(true)}
+					onMouseLeave={() => setHovered(false)}
 				>
-					<Link to={Item.link} className={styles.AsideBlock}>
-						<div className={styles.AsideBlockIcon}>{Item.icon}</div>
-						<AnimatedText>{Item.name}</AnimatedText>
-					</Link>
-				</motion.div>
-			))}
-		</motion.aside>
+					{sideBarInfo.map((Item, index) => (
+						<motion.div
+							key={index}
+							initial={{ scale: 1 }}
+							whileHover={{ scale: 1.1 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<Link to={Item.link} className={styles.AsideBlock}>
+								<div className={styles.AsideBlockIcon}>{Item.icon}</div>
+								<AnimatedText>{Item.name}</AnimatedText>
+							</Link>
+						</motion.div>
+					))}
+				</motion.aside>
+			)}
+		</div>
 	)
 }
 export default React.memo(BurgerMenu)

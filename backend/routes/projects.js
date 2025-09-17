@@ -8,4 +8,10 @@ const auth = require('../middleware/auth')
 // Отримати всі проекти користувача
 router.get('/user/:user_id', auth, projectsController.getUserProjects)
 
+// Отримати проекти за категорією
+router.get('/category/:category', projectsController.getProjectsByCategory)
+
+// Отримати деталі проекту за ID
+router.get('/:id', projectsController.getProjectById)
+
 module.exports = router
