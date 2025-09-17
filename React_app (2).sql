@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 28, 2025 at 03:23 PM
+-- Generation Time: Sep 17, 2025 at 01:46 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,129 @@ SET time_zone = "+00:00";
 --
 -- Database: `React_app`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bids`
+--
+
+CREATE TABLE `bids` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `cover_letter` text DEFAULT NULL,
+  `bid_amount` decimal(10,2) DEFAULT NULL,
+  `status` enum('pending','accepted','rejected') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_messages`
+--
+
+CREATE TABLE `chat_messages` (
+  `id` int(11) NOT NULL,
+  `chat_room_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `chat_messages`
+--
+
+INSERT INTO `chat_messages` (`id`, `chat_room_id`, `sender_id`, `message`, `is_read`, `created_at`) VALUES
+(1, 5, 66, 'іва', 0, '2025-05-28 14:42:20'),
+(2, 6, 66, 'аіфв', 0, '2025-05-28 14:42:25'),
+(3, 7, 66, 'афів', 0, '2025-05-28 14:42:38'),
+(4, 8, 66, 'іва', 0, '2025-05-28 14:44:38'),
+(5, 8, 66, 'віаіва', 0, '2025-05-28 14:44:41'),
+(6, 8, 66, 'віаіва', 0, '2025-05-28 14:44:42'),
+(7, 9, 66, 'віа', 0, '2025-05-28 14:46:03'),
+(8, 9, 66, 'авіавіа', 0, '2025-05-28 14:46:08'),
+(9, 9, 66, 'аівіфІВВАВІФВА', 0, '2025-05-28 14:46:14'),
+(10, 9, 66, 'івіф', 0, '2025-05-28 14:48:23'),
+(11, 9, 66, 'аівіфв', 0, '2025-05-28 15:22:32'),
+(12, 8, 66, 'аівфі', 0, '2025-05-28 15:22:38'),
+(13, 11, 64, 'афів', 0, '2025-05-28 15:22:55'),
+(14, 11, 66, 'авііфв', 0, '2025-05-28 15:24:00'),
+(15, 11, 64, 'авііфв', 0, '2025-05-28 15:24:09'),
+(16, 11, 66, 'Афін', 0, '2025-05-28 15:26:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_participants`
+--
+
+CREATE TABLE `chat_participants` (
+  `id` int(11) NOT NULL,
+  `chat_room_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `chat_participants`
+--
+
+INSERT INTO `chat_participants` (`id`, `chat_room_id`, `user_id`, `created_at`) VALUES
+(1, 1, 66, '2025-05-28 14:34:33'),
+(2, 1, 67, '2025-05-28 14:34:33'),
+(3, 2, 66, '2025-05-28 14:36:08'),
+(4, 2, 67, '2025-05-28 14:36:08'),
+(5, 3, 66, '2025-05-28 14:37:42'),
+(6, 3, 67, '2025-05-28 14:37:42'),
+(7, 4, 66, '2025-05-28 14:40:02'),
+(8, 4, 67, '2025-05-28 14:40:02'),
+(9, 5, 66, '2025-05-28 14:40:33'),
+(10, 5, 67, '2025-05-28 14:40:33'),
+(11, 6, 66, '2025-05-28 14:42:23'),
+(12, 6, 67, '2025-05-28 14:42:23'),
+(13, 7, 66, '2025-05-28 14:42:36'),
+(14, 7, 67, '2025-05-28 14:42:36'),
+(15, 8, 66, '2025-05-28 14:44:35'),
+(16, 8, 67, '2025-05-28 14:44:35'),
+(17, 9, 66, '2025-05-28 14:44:45'),
+(18, 9, 67, '2025-05-28 14:44:45'),
+(19, 10, 66, '2025-05-28 14:46:45'),
+(20, 10, 68, '2025-05-28 14:46:45'),
+(21, 11, 64, '2025-05-28 15:22:53'),
+(22, 11, 66, '2025-05-28 15:22:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_rooms`
+--
+
+CREATE TABLE `chat_rooms` (
+  `id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `chat_rooms`
+--
+
+INSERT INTO `chat_rooms` (`id`, `created_at`, `updated_at`) VALUES
+(1, '2025-05-28 14:34:33', '2025-05-28 14:34:33'),
+(2, '2025-05-28 14:36:08', '2025-05-28 14:36:08'),
+(3, '2025-05-28 14:37:42', '2025-05-28 14:37:42'),
+(4, '2025-05-28 14:40:02', '2025-05-28 14:40:02'),
+(5, '2025-05-28 14:40:33', '2025-05-28 14:40:33'),
+(6, '2025-05-28 14:42:23', '2025-05-28 14:42:23'),
+(7, '2025-05-28 14:42:36', '2025-05-28 14:42:36'),
+(8, '2025-05-28 14:44:35', '2025-05-28 14:44:35'),
+(9, '2025-05-28 14:44:45', '2025-05-28 14:44:45'),
+(10, '2025-05-28 14:46:45', '2025-05-28 14:46:45'),
+(11, '2025-05-28 15:22:53', '2025-05-28 15:22:53');
 
 -- --------------------------------------------------------
 
@@ -77,42 +200,6 @@ INSERT INTO `freelancers` (`id`, `user_id`, `title`, `description`, `hourly_rate
 (1, 66, 'Full Stack Developer', 'Розробник з 5-річним досвідом створення веб-додатків. Спеціалізуюсь на MERN stack.', 35.00, 'development', 45, 4.80, 0, 'Київ, Україна', 1, '2025-05-28 10:31:58', '2025-05-28 10:31:58'),
 (2, 67, 'UI/UX Designer', 'Дизайнер з креативним підходом та увагою до деталей. Створюю інтуїтивні інтерфейси.', 40.00, 'design', 38, 4.90, 0, 'Львів, Україна', 1, '2025-05-28 10:31:58', '2025-05-28 10:31:58'),
 (3, 68, 'Digital Marketing Specialist', 'Експерт з цифрового маркетингу з досвідом роботи з великими брендами.', 30.00, 'marketing', 52, 4.70, 0, 'Харків, Україна', 1, '2025-05-28 10:31:58', '2025-05-28 10:31:58');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `freelancer_reviews`
---
-
-CREATE TABLE `freelancer_reviews` (
-  `id` int(11) NOT NULL,
-  `freelancer_id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
-  `rating` int(1) NOT NULL CHECK (`rating` >= 1 and `rating` <= 5),
-  `comment` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Triggers `freelancer_reviews`
---
-DELIMITER $$
-CREATE TRIGGER `update_freelancer_rating` AFTER INSERT ON `freelancer_reviews` FOR EACH ROW BEGIN
-    UPDATE freelancers 
-    SET rating = (
-        SELECT AVG(rating) 
-        FROM freelancer_reviews 
-        WHERE freelancer_id = NEW.freelancer_id
-    ),
-    total_reviews = (
-        SELECT COUNT(*) 
-        FROM freelancer_reviews 
-        WHERE freelancer_id = NEW.freelancer_id
-    )
-    WHERE id = NEW.freelancer_id;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -233,6 +320,68 @@ INSERT INTO `notifications` (`id`, `user_id`, `stake_id`, `content`, `type`, `cr
 (55, 66, 44, 'Вітаємо! Ви виграли 397.6500₴ у ставці на команду Toronto Ultra', 'win', '2024-11-09 13:09:15'),
 (56, 66, 45, 'Вітаємо! Ви виграли 386.1000₴ у ставці на команду Toronto Ultra', 'win', '2024-11-09 13:09:15'),
 (57, 66, 46, 'Вітаємо! Ви виграли 351.4500₴ у ставці на команду Toronto Ultra', 'win', '2024-11-09 13:09:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `budget` decimal(10,2) DEFAULT NULL,
+  `deadline` date DEFAULT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `image` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `user_id`, `title`, `description`, `budget`, `deadline`, `category`, `created_at`, `updated_at`, `image`) VALUES
+(5, 61, 'Розробка сайту портфоліо', 'Створити сучасний сайт-портфоліо для дизайнера.', 8000.00, '2025-07-01', 'web-development', '2025-05-28 18:45:59', '2025-05-28 18:50:29', 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=600&q=80'),
+(6, 64, 'Мобільний додаток для замовлення їжі', 'Додаток для Android/iOS з інтеграцією карт та оплатою.', 25000.00, '2025-08-15', 'mobile-development', '2025-05-28 18:45:59', '2025-05-28 20:21:54', 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=600&q=80'),
+(7, 66, 'Редизайн логотипу', 'Потрібно оновити логотип для бренду.', 3000.00, '2025-06-20', 'design', '2025-05-28 18:45:59', '2025-05-28 20:03:19', 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=600&q=80'),
+(8, 67, 'SEO оптимізація сайту', 'Покращити видимість сайту у Google.', 5000.00, '2025-07-10', 'marketing', '2025-05-28 18:45:59', '2025-05-28 20:21:56', 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=600&q=80'),
+(9, 68, 'Landing page для стартапу', 'Лендінг для презентації стартапу.', 12000.00, '2025-09-01', 'web-development', '2025-05-28 18:45:59', '2025-05-28 20:21:58', 'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=600&q=80');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `freelancer_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL CHECK (`rating` >= 1 and `rating` <= 5),
+  `comment` text NOT NULL,
+  `price_min` decimal(10,2) DEFAULT NULL,
+  `price_max` decimal(10,2) DEFAULT NULL,
+  `duration_days` int(11) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `helpful_yes` int(11) DEFAULT 0,
+  `helpful_no` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `freelancer_id`, `client_id`, `rating`, `comment`, `price_min`, `price_max`, `duration_days`, `category`, `created_at`, `helpful_yes`, `helpful_no`) VALUES
+(1, 1, 66, 5, 'Чудовий фрілансер! Робота виконана вчасно і якісно.', 1000.00, 2000.00, 5, 'Web Development', '2025-05-28 13:37:39', 10, 0),
+(2, 1, 66, 4, 'Добре співпрацювали, рекомендую.', 800.00, 1500.00, 3, 'Design', '2025-05-28 13:37:39', 5, 1),
+(3, 2, 66, 5, 'Професіонал своєї справи!', 2000.00, 3000.00, 7, 'Mobile Development', '2025-05-28 13:37:39', 15, 0),
+(4, 2, 66, 3, 'Непогано, але були затримки.', 500.00, 1000.00, 2, 'Writing', '2025-05-28 13:37:39', 2, 3),
+(5, 3, 67, 5, 'Відмінний результат, дуже задоволений.', 1500.00, 2500.00, 4, 'Marketing', '2025-05-28 13:37:39', 8, 0);
 
 -- --------------------------------------------------------
 
@@ -431,6 +580,37 @@ INSERT INTO `user_views` (`id`, `user_id`, `news_id`, `created_at`) VALUES
 --
 
 --
+-- Indexes for table `bids`
+--
+ALTER TABLE `bids`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `project_id` (`project_id`);
+
+--
+-- Indexes for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender_id` (`sender_id`),
+  ADD KEY `idx_chat_messages_room_id` (`chat_room_id`),
+  ADD KEY `idx_chat_messages_created_at` (`created_at`);
+
+--
+-- Indexes for table `chat_participants`
+--
+ALTER TABLE `chat_participants`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `chat_room_id` (`chat_room_id`),
+  ADD KEY `idx_chat_participants_user_id` (`user_id`);
+
+--
+-- Indexes for table `chat_rooms`
+--
+ALTER TABLE `chat_rooms`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `comments`
 --
 ALTER TABLE `comments`
@@ -445,14 +625,6 @@ ALTER TABLE `comments`
 ALTER TABLE `freelancers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `freelancer_reviews`
---
-ALTER TABLE `freelancer_reviews`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `freelancer_id` (`freelancer_id`),
-  ADD KEY `client_id` (`client_id`);
 
 --
 -- Indexes for table `freelancer_skills`
@@ -474,6 +646,19 @@ ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `fk_stake` (`stake_id`);
+
+--
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `skills`
@@ -517,22 +702,40 @@ ALTER TABLE `user_views`
 --
 
 --
+-- AUTO_INCREMENT for table `bids`
+--
+ALTER TABLE `bids`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `chat_participants`
+--
+ALTER TABLE `chat_participants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `chat_rooms`
+--
+ALTER TABLE `chat_rooms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
 
 --
 -- AUTO_INCREMENT for table `freelancers`
 --
 ALTER TABLE `freelancers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `freelancer_reviews`
---
-ALTER TABLE `freelancer_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -545,6 +748,18 @@ ALTER TABLE `news`
 --
 ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
+--
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `skills`
@@ -581,6 +796,27 @@ ALTER TABLE `user_views`
 --
 
 --
+-- Constraints for table `bids`
+--
+ALTER TABLE `bids`
+  ADD CONSTRAINT `bids_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `bids_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`);
+
+--
+-- Constraints for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chat_messages_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `chat_participants`
+--
+ALTER TABLE `chat_participants`
+  ADD CONSTRAINT `chat_participants_ibfk_1` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_rooms` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chat_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
@@ -592,13 +828,6 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `freelancers`
   ADD CONSTRAINT `freelancers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `freelancer_reviews`
---
-ALTER TABLE `freelancer_reviews`
-  ADD CONSTRAINT `freelancer_reviews_ibfk_1` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancers` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `freelancer_reviews_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `freelancer_skills`
@@ -613,6 +842,12 @@ ALTER TABLE `freelancer_skills`
 ALTER TABLE `notifications`
   ADD CONSTRAINT `fk_stake` FOREIGN KEY (`stake_id`) REFERENCES `stake` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `projects`
+  ADD CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `support`
